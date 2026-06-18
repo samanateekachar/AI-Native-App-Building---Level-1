@@ -50,16 +50,16 @@ export default function PerformanceDashboard({ data, onRefresh }: PerformanceDas
 
   // Derive filter option sets list from current dataset
   const filterOptions = useMemo(() => {
-    const weeks = Array.from(new Set(data.map(r => r.week))).sort((a,b) => {
+    const weeks = Array.from(new Set(data.map(r => r.week).filter((x): x is string => !!x))).sort((a,b) => {
       const numA = parseInt(a.replace(/^\D+/g, "")) || 0;
       const numB = parseInt(b.replace(/^\D+/g, "")) || 0;
       return numA - numB;
     });
-    const regions = Array.from(new Set(data.map(r => r.region))).sort();
-    const stores = Array.from(new Set(data.map(r => `${r.storeId} - ${r.storeName}`))).sort();
-    const cities = Array.from(new Set(data.map(r => r.city))).sort();
-    const formats = Array.from(new Set(data.map(r => r.storeFormat))).sort();
-    const categories = Array.from(new Set(data.map(r => r.category))).sort();
+    const regions = Array.from(new Set(data.map(r => r.region).filter((x): x is string => !!x))).sort();
+    const stores = Array.from(new Set(data.map(r => r.storeId && r.storeName ? `${r.storeId} - ${r.storeName}` : "").filter(Boolean))).sort();
+    const cities = Array.from(new Set(data.map(r => r.city).filter((x): x is string => !!x))).sort();
+    const formats = Array.from(new Set(data.map(r => r.storeFormat).filter((x): x is string => !!x))).sort();
+    const categories = Array.from(new Set(data.map(r => r.category).filter((x): x is string => !!x))).sort();
 
     return { weeks, regions, stores, cities, formats, categories };
   }, [data]);
@@ -460,8 +460,8 @@ export default function PerformanceDashboard({ data, onRefresh }: PerformanceDas
                 onChange={(e) => { setSelectedWeek(e.target.value); setTablePage(1); }}
                 className="w-full text-xs bg-white border border-slate-200 focus:border-blue-400 rounded-lg py-2 pl-3 pr-8 appearance-none text-slate-700 font-semibold focus:outline-none cursor-pointer"
               >
-                <option value="All">All Weeks (1-12)</option>
-                {filterOptions.weeks.map(w => <option key={w} value={w}>{w}</option>)}
+                <option key="all-weeks" value="All">All Weeks (1-12)</option>
+                {filterOptions.weeks.map((w) => <option key={`week-${w}`} value={w}>{w}</option>)}
               </select>
               <ChevronDown className="absolute right-2.5 top-3 h-3 w-3 text-slate-400 pointer-events-none" />
             </div>
@@ -477,8 +477,8 @@ export default function PerformanceDashboard({ data, onRefresh }: PerformanceDas
                 onChange={(e) => { setSelectedRegion(e.target.value); setTablePage(1); }}
                 className="w-full text-xs bg-white border border-slate-200 focus:border-blue-400 rounded-lg py-2 pl-3 pr-8 appearance-none text-slate-700 font-semibold focus:outline-none cursor-pointer"
               >
-                <option value="All">All Regions</option>
-                {filterOptions.regions.map(r => <option key={r} value={r}>{r}</option>)}
+                <option key="all-regions" value="All">All Regions</option>
+                {filterOptions.regions.map((r) => <option key={`region-${r}`} value={r}>{r}</option>)}
               </select>
               <ChevronDown className="absolute right-2.5 top-3 h-3 w-3 text-slate-400 pointer-events-none" />
             </div>
@@ -494,8 +494,8 @@ export default function PerformanceDashboard({ data, onRefresh }: PerformanceDas
                 onChange={(e) => { setSelectedStore(e.target.value); setTablePage(1); }}
                 className="w-full text-xs bg-white border border-slate-200 focus:border-blue-400 rounded-lg py-2 pl-3 pr-8 appearance-none text-slate-700 font-semibold focus:outline-none cursor-pointer"
               >
-                <option value="All">All Stores</option>
-                {filterOptions.stores.map(s => <option key={s} value={s}>{s}</option>)}
+                <option key="all-stores" value="All">All Stores</option>
+                {filterOptions.stores.map((s) => <option key={`store-${s}`} value={s}>{s}</option>)}
               </select>
               <ChevronDown className="absolute right-2.5 top-3 h-3 w-3 text-slate-400 pointer-events-none" />
             </div>
@@ -511,8 +511,8 @@ export default function PerformanceDashboard({ data, onRefresh }: PerformanceDas
                 onChange={(e) => { setSelectedCity(e.target.value); setTablePage(1); }}
                 className="w-full text-xs bg-white border border-slate-200 focus:border-blue-400 rounded-lg py-2 pl-3 pr-8 appearance-none text-slate-700 font-semibold focus:outline-none cursor-pointer"
               >
-                <option value="All">All Cities</option>
-                {filterOptions.cities.map(c => <option key={c} value={c}>{c}</option>)}
+                <option key="all-cities" value="All">All Cities</option>
+                {filterOptions.cities.map((c) => <option key={`city-${c}`} value={c}>{c}</option>)}
               </select>
               <ChevronDown className="absolute right-2.5 top-3 h-3 w-3 text-slate-400 pointer-events-none" />
             </div>
@@ -528,8 +528,8 @@ export default function PerformanceDashboard({ data, onRefresh }: PerformanceDas
                 onChange={(e) => { setSelectedFormat(e.target.value); setTablePage(1); }}
                 className="w-full text-xs bg-white border border-slate-200 focus:border-blue-400 rounded-lg py-2 pl-3 pr-8 appearance-none text-slate-700 font-semibold focus:outline-none cursor-pointer"
               >
-                <option value="All">All Formats</option>
-                {filterOptions.formats.map(f => <option key={f} value={f}>{f}</option>)}
+                <option key="all-formats" value="All">All Formats</option>
+                {filterOptions.formats.map((f) => <option key={`format-${f}`} value={f}>{f}</option>)}
               </select>
               <ChevronDown className="absolute right-2.5 top-3 h-3 w-3 text-slate-400 pointer-events-none" />
             </div>
@@ -545,8 +545,8 @@ export default function PerformanceDashboard({ data, onRefresh }: PerformanceDas
                 onChange={(e) => { setSelectedCategory(e.target.value); setTablePage(1); }}
                 className="w-full text-xs bg-white border border-slate-200 focus:border-blue-400 rounded-lg py-2 pl-3 pr-8 appearance-none text-slate-700 font-semibold focus:outline-none cursor-pointer"
               >
-                <option value="All">All Categories</option>
-                {filterOptions.categories.map(c => <option key={c} value={c}>{c}</option>)}
+                <option key="all-categories" value="All">All Categories</option>
+                {filterOptions.categories.map((c) => <option key={`category-${c}`} value={c}>{c}</option>)}
               </select>
               <ChevronDown className="absolute right-2.5 top-3 h-3 w-3 text-zinc-400 pointer-events-none" />
             </div>
