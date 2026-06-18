@@ -1,0 +1,6 @@
+{
+  "name": "Retail Sales Intelligence App",
+  "description": "A comprehensive executive dashboard for retail sales analysis, store target tracking, and AI-powered sales intelligence summaries.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
